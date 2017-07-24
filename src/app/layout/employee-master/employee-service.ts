@@ -47,19 +47,49 @@ export class EmployeeService {
             .catch(this.handleErrorObservable);
     }
 
+    //get subcategory
+    getSubCategory(): Observable<SubCategory[]>
+    {
+        return this._http.get(this.baseUrl + 'sub_category')
+            .map(this.extractData)
+            .catch(this.handleErrorObservable);
+    }
+
+   
+
+    //get Employee Data
     getEmployee(): Observable<Employee[]> {
         return this._http.get(this.baseUrl + 'Employee_data')
             .map(this.extractData)
             .catch(this.handleErrorObservable);
     }
 
-    //post Employee data
+    getSingleEmployee(emp_code: number): Observable<Employee[]>
+    {
+        return this._http.get(this.baseUrl + 'Single_Employee/' + emp_code)
+            .map(this.extractData)
+            .catch(this.handleErrorObservable);
+    }
+    
+
+    //Insert Employee data
     addEmployee(employee: Employee): Observable<Employee> {
         console.log("Employee", employee);
         //this.data = JSON.parse(employee);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        return this._http.post(this.baseUrl + 'Add_Employee', employee, options).map(res => res.text() ? res.json() : res)
+        return this._http.post(this.baseUrl + 'Add_Employee/', employee, options).map(res => res.text() ? res.json() : res)
+            //.map(this.extractData)
+            .catch(this.handleErrorObservable);
+    }
+
+    //Update employee Data
+    UpdateEmployeeData(employee: Employee): Observable<Employee> {
+        console.log("Employee", employee);
+        //this.data = JSON.parse(employee);
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        return this._http.post(this.baseUrl + 'update_employee/', employee, options).map(res => res.text() ? res.json() : res)
             //.map(this.extractData)
             .catch(this.handleErrorObservable);
     }

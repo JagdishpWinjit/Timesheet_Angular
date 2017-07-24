@@ -4,7 +4,7 @@
     EmployeeName: string;
     Email: string;
     Password: string;
-    DateOfJoining: Date;
+    DateOfJoining: string;
     OptimisticLockField: number;
     IsAdmin: boolean;
     Roles: number;
@@ -32,4 +32,13 @@
     PasswordChangedDate: string;
     GUID: number;
     ExtensionNumber: number;
+    Depart: string;
+    CategoryName: string;
+    DepartmentId: number;
+    DOJ: Date;
+    DOL: Date;
+    SubCategoryName: string;
+    SubCategoryOID: number;
+    CategoryOID: number;
+    Rollname: string;
 }

@@ -15,12 +15,15 @@ import { DxDataGridModule,
         DxTreeViewModule,
         DxTextBoxModule,
         DxFileUploaderModule,
+        DxValidatorModule,
+        DxValidationSummaryModule,
         DxFormModule} from 'devextreme-angular';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { CustomFormsModule } from 'ng2-validation'
 import { EmployeeService } from './employee-service';
-
+import { EqualValidator } from '../../EqualValidator';
+import { ImageCropperComponent, CropperSettings } from 'ng2-img-cropper';
 @NgModule({
     imports: [
         CommonModule,
@@ -40,9 +43,12 @@ import { EmployeeService } from './employee-service';
         DxTemplateModule,
         DxDropDownBoxModule,
         DxTreeViewModule,
-        CustomFormsModule
+        CustomFormsModule,
+        DxValidatorModule,
+        DxValidationSummaryModule
     ],
     providers: [EmployeeService],
-    declarations: [EmployeeMasterComponent]
+    declarations: [EmployeeMasterComponent, EqualValidator, ImageCropperComponent]
+    
 })
 export class EmployeeModule { }

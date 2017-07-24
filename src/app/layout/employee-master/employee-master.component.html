@@ -1,4 +1,6 @@
-﻿<app-page-header [heading]="'Employee Master'"></app-page-header>
+﻿<!--<app-page-header [heading]="'Employee Master'"></app-page-header>-->
+<h3>Employee Master</h3>
+<hr/>
 <div class="row">
     <div class="col-lg-12">  
         <div *ngIf="!showContainer">
@@ -7,21 +9,18 @@
                           [dataSource]="employees"
                           [allowColumnReordering]="true"
                           [allowColumnResizing]="true"
-                          [columnAutoWidth]="true">
+                          [columnAutoWidth]="true"
+                          (onEditingStart)="OnEditingStart($event)">
                 <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
                 <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
                 <dxo-filter-row [visible]="showFilterRow"
                                 [applyFilter]="auto"></dxo-filter-row>
 
                 <dxo-header-filter [visible]="showHeaderFilter"></dxo-header-filter>
-                <dxo-editing mode="popup"
-                             [allowUpdating]="true">
-                    <dxo-popup title="Employee Info"
-                               [showTitle]="true"
-                               [width]="700"
-                               [height]="550"
-                               [position]="{ my: 'top', at: 'top', of: window }">
-                    </dxo-popup>
+                <dxo-editing mode="form"
+                             [allowUpdating]="true"
+                             [allowDeleting]="false"
+                             >
                 </dxo-editing>
                
                 <dxo-search-panel [visible]="true"
@@ -33,12 +32,14 @@
                             [width]="230"
                             [fixed]="true"
                             ></dxi-column>
-                <dxi-column caption="Employee No"
-                            dataField="EmployeeNumber"
+                
+                <dxi-column caption="Employee Code"
+                            dataField="EmployeeCode"
                             ></dxi-column>
                 <dxi-column dataField="Email"></dxi-column>
-                <dxi-column dataField="DateOfJoining" caption="Date Of joining" dataType="date"></dxi-column>
-                <dxi-column dataField="DateOfLeaving" caption="Date Of Leaving" dataType="date"></dxi-column>
+                <dxi-column dataField="OID" [visible]="false" ></dxi-column>
+                <dxi-column dataField="DOJ" caption="Date Of joining" ></dxi-column>
+                <dxi-column dataField="DOL" caption="Date Of Leaving" ></dxi-column>
                 <dxi-column dataField="IsActive" caption="Active"></dxi-column>
                 <dxi-column dataField="IsAdmin" caption="Admin"></dxi-column>
                 <dxi-column dataField="IsPMO" caption="PMO"></dxi-column>
@@ -47,12 +48,10 @@
                 <dxi-column dataField="IsTimesheetToBeApproved" caption="Timesheet To be Approved"></dxi-column>
                 <dxi-column dataField="DisplayBillingPrice" caption="Display Billing Price"></dxi-column>
                 <dxi-column dataField="DisplayCostPrice" caption="Display Cost Price"></dxi-column>
-                <dxi-column dataField="Roles" caption="Roles"></dxi-column>
-                <dxi-column dataField="Department" caption="Department"></dxi-column>
-                <dxi-column dataField="EmployeeCategory" caption="Category"></dxi-column>
-                <dxi-column dataField="EmployeeCode" caption="Sub Category"></dxi-column>
-               
-                
+                <dxi-column dataField="Rollname" caption="Roles"></dxi-column>
+                <dxi-column dataField="Depart" caption="Department"></dxi-column>
+                <dxi-column dataField="CategoryName" caption="Category"></dxi-column>
+                <dxi-column dataField="SubCategoryName" caption="Sub Category"></dxi-column>
             </dx-data-grid>
         </div>
     </div>
@@ -65,10 +64,9 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">Personal Information</div>
                         <div class="panel-body">
-                            <div class="form-group">
-                                <label for="EmployeeNumber">Employee Number:</label>
-                                <input type="number" #e_no="ngModel" class="form-control" maxlength="3" id="e_no" placeholder="Employee Number"  name="EmployeeNumber" ngModel required>
-                                
+                            <!--<div class="form-group">
+                               <label for="EmployeeNumber">Employee Number:</label>
+                               <input type="number" #e_no="ngModel" class="form-control" maxlength="3" id="e_no" placeholder="Employee Number"  name="EmployeeNumber" ngModel required>
                                 <div *ngIf="e_no.errors && (e_no.dirty || e_no.touched)" class="alert alert-danger">
                                     <div [hidden]="!e_no.errors.required">
                                         Please Enter Employee Number
@@ -76,36 +74,22 @@
                                     <div [hidden]="!e_no.errors.maxlength">
                                         Please Enter atlest 4 Character
                                     </div>
-
                                 </div>
-                                    <!--<div *ngIf="e_no.errors && (e_no.dirty || e_no.touched)" class="alert alert-danger">
-                                        <div [hidden]="!e_no.errors.required">
-                                            Please Enter Employee Number
-                                        </div>
-                                    </div>-->
-                                    <!--<div [hidden]="!e_no.errors.minlength">
-                                        Please Enter atlest 4 Character
-                                    </div>
-                                    <div [hidden]="!e_no.errors.maxlength">
-                                        Please do not exceed 5 Character
-                                    </div>-->
-                               
-                            </div>
+                            </div>-->
+                           <input type="text" id="e_id" name="EmployeeOID" [(ngModel)]="OID" hidden /> 
                             <div class="form-group">
                                 <label for="EmployeeCode">Employee Code:</label>
-                                <input type="number" #e_code="ngModel" class="form-control" id="e_code" placeholder="Employee Code" name="EmployeeCode" ngModel required>
+                                <input type="number" #e_code="ngModel" class="form-control" id="e_code" placeholder="Employee Code" name="EmployeeCode" [(ngModel)]="emp_code" required>
                                 <div *ngIf="e_code.errors && (e_code.dirty || e_code.touched)" class="alert alert-danger">
                                     <div [hidden]="!e_code.errors.required">
                                         Please Enter Employee Code
                                     </div>
                                    
                                 </div>
-                                   
-                                   
                              </div>
                             <div class="form-group">
                                 <label for="EmployeeName">Employee Name:</label>
-                                <input type="text" class="form-control" #e_name="ngModel" pattern="[A-Z a-z]{1,30}" id="e_name" placeholder="Employee Name" maxlength="30" name="EmployeeName" ngModel required >
+                                <input type="text" class="form-control" #e_name="ngModel" pattern="[A-Z a-z]{1,30}" id="e_name" placeholder="Employee Name" maxlength="30" name="EmployeeName" [(ngModel)]="emp_name" required >
                                
                                 <div *ngIf="e_name.errors && (e_name.dirty || e_name.touched)" class="alert alert-danger">
                                     <div [hidden]="!e_name.errors.required">
@@ -121,7 +105,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="Email">Email Address:</label>
-                                <input type="email" class="form-control" id="email" #email="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" placeholder="Email Address" name="Email" ngModel required>
+                                <input type="email" class="form-control" id="email" #email="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" placeholder="Email Address" name="Email" [(ngModel)]="emp_address" required>
                                 <div *ngIf="email.errors && (email.dirty || email.touched)" class="alert alert-danger">
                                     <div [hidden]="!email.errors.pattern">
                                         Please Enter Valid Email
@@ -131,9 +115,10 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="form-group">
                                 <label for="Password">Password:</label>
-                                <input type="password" #password="ngModel" minlength="4" class="form-control" id="pass" placeholder="Password" name="Password" ngModel required>
+                                <input type="password" [disabled]="archiveStatus" #password="ngModel" minlength="4" class="form-control" id="pass" placeholder="Password" name="Password" ngModel required>
                                 <div *ngIf="password.errors && (password.dirty || password.touched)" class="alert alert-danger">
                                     <div [hidden]="!password.errors.required">
                                         Please Enter Password
@@ -145,50 +130,59 @@
                             </div>
                             <div class="form-group">
                                 <label for="c_pass">Confirm Password:</label>
-                                <input type="password" #cpass="ngModel" class="form-control" validateEqual="Password" reverse="false" minlength="4" id="c_pass" placeholder="Confirm Password" name="c_pass" ngModel required>
-                                <div *ngIf="cpass.errors && (cpass.dirty || cpass.touched)" class="alert alert-danger">
-                                    <div [hidden]="!cpass.errors.required">
-                                        Please Enter Confirm Password
+                                <input type="password"  [disabled]="archiveStatus" #cpass="ngModel" class="form-control" validateEqual="Password" reverse="false" minlength="4" id="c_pass" placeholder="Confirm Password" name="c_pass" ngModel required>
+                                <div [hidden]="cpass.valid || cpass.pristine"
+                                     class="alert alert-danger">
+                                    Passwords did not match
+                                </div>
+                              
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="exampleInputFile" class="col-md-4">Select Image:</label>
+                                        <fieldset class="form-group col-md-8">
+                                            <input #fileInput type="file" class="form-control-file" id="exampleInputFile" accept="image/gif, image/jpeg, image/png" name="sampleFile" (change)="fileChangeEvent($event)">
+                                        </fieldset>
                                     </div>
-                                    <div [hidden]="!cpass.errors.minlength">
-                                        Please Enter atleast 4 character
-                                    </div>
-                                    <div [hidden]="!cpass.errors.valid">
-                                        Please Enter check
+                                    <div class="col-md-6">
+                                        <img-cropper hidden [settings]="cropperSettings"></img-cropper><br>
+                                        <img [src]='imageSrc' alt="your image"   class="img-responsive center-block" [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight"/>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
                 <div class="col-lg-6">
                     <div class="panel panel-primary">
                         <div class="panel-heading">Administrative Information</div>
                         <div class="panel-body">
-
-                            <div class="form-group">
-                                <label for="DateOfJoining">Date of Joining:</label>
-                                <input type="date" class="form-control" #jdate="ngModel" id="joining_date" placeholder="Date of Joining" name="DateOfJoining" ngModel required>
-                                <div *ngIf="jdate.errors && (jdate.dirty || jdate.touched)" class="alert alert-danger">
-                                    <div [hidden]="!jdate.errors.required">
-                                        Please select Date
-                                    </div>
+                            <div class="dx-field">
+                                <div class="dx-field-label"><strong>Date of Joining:</strong></div>
+                                <div class="dx-field-value">
+                                    <dx-date-box [(ngModel)]="DOJ"
+                                                 type="date"
+                                                 name="DateOfJoining"
+                                                 ngModel>
+                                    </dx-date-box>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="DateOfLeaving">Date of Leaving:</label>
-                                <input type="date" #Ldate="ngModel" class="form-control" id="leaving_date" placeholder="Date of Leaving" name="DateOfLeaving" ngModel required>
-                                <div *ngIf="Ldate.errors && (Ldate.dirty || Ldate.touched)" class="alert alert-danger">
-                                    <div [hidden]="!Ldate.errors.required">
-                                        Please select Date
-                                    </div>
+                            <div class="dx-field">
+                                <div class="dx-field-label"><strong>Date of Leaving:</strong></div>
+                                <div class="dx-field-value">
+                                    <dx-date-box [(ngModel)]="DOL"
+                                                 type="date"
+                                                 name="DateOfLeaving"
+                                                 ngModel>
+                                    </dx-date-box>
                                 </div>
                             </div>
+                           
                             <div class="form-group row">
-                                <label for="EmployeeCategory" class="col-md-4">Select Category:</label>
-                                <select class="form-control col-md-7" #category="ngModel" style="height:30px;" (change)="Onselect($event.target.value)" id="EmployeeCategory" name="EmployeeCategory" ngModel required>
+                                <label for="EmployeeCategory" class="col-md-5">Select Category:</label>
+                                <select class="form-control col-md-7"  #category="ngModel" style="height:30px;" (change)="Onselect($event.target.value)" id="EmployeeCategory" name="EmployeeCategory" [(ngModel)]="Category" required>
                                     <option value="0">--Select--</option>
                                     <option *ngFor=" let category of categories"
                                             value={{category.OID}}>
@@ -202,8 +196,8 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <div class="col-md-4"></div>
-                                <select class="form-control col-md-7" #subCategory="ngModel" style="height:30px;" name="sub_category" ngModel required>
+                                <div class="col-md-5"></div>
+                                <select class="form-control col-md-7" #subCategory="ngModel" style="height:30px;" name="sub_category" [(ngModel)]="SubCategory" required>
                                     <option value="0">--Select--</option>
                                     <option *ngFor=" let subcategory of subcategories" value={{subcategory.OID}}>
                                         {{subcategory.SubCategoryName}}
@@ -216,8 +210,8 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-4" for="Department">Department:</label>
-                                <select class="form-control col-md-7" #dept="ngModel" style="height:30px;" name="Department" ngModel required>
+                                <label class="col-md-5" for="Department">Department:</label>
+                                <select class="form-control col-md-7" #dept="ngModel" style="height:30px;" name="Department" [(ngModel)]="department" required>
                                     <option value="0">--Select--</option>
                                     <option *ngFor=" let depart of departments" value={{depart.OID}}>
                                         {{depart.Department}}
@@ -229,207 +223,45 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label class="col-md-5" for="active">Is Active</label>
+                                <input type="checkbox" name="active" [(ngModel)]="IsActive"/>
+                            </div>
+
                             <div class="form-group">
                                 <label>Employee Roles</label>
-                                <select id="dates-field2" style="height:inherit;" class="multiselect-ui form-control" multiple="multiple" >
+                                <select id="dates-field2"  #role="ngModel" style="height:200px;" name="Role" class="multiselect-ui form-control" multiple="multiple" [(ngModel)]="selectedRoleObj" required >
                                     <option value="0">--Select--</option>
                                     <option *ngFor="let role of roles" value={{role.OID}}>
                                         {{role.RollName}}
                                     </option>
                                 </select>
-                            </div>
-                            <br>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-primary">
-                        <div class="panel-body">
-
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="col-md-6">
-                                            <label for="Roles">Roles</label>
-                                            <div class="checkbox" *ngFor="let role of roles">
-                                                <label>
-                                                    <input type="checkbox" value="{{role.OID}}" name="Roles" (change)="Checked(role.OID,$event)">{{role.RollName}}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="IsActive">Active User</label>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" value="$event.target.checked" name="IsActive" ngModel> Is Active
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <img src="../assets/images/person.png" alt="your image" class="img-responsive" onerror="this.src='../resources/images/none.jpg'" class="img-responsive center-block" />
-                                        <br>
-                                        <div class="row">
-                                            <label for="exampleInputFile" class="col-md-4">Select Image:</label>
-                                            <fieldset class="form-group col-md-8">
-                                                <input type="file" class="form-control-file" id="exampleInputFile" (change)="handleUpload($event)">
-                                            </fieldset>
-                                        </div>
+                                <div *ngIf="role.errors && (role.dirty || role.touched)" class="alert alert-danger">
+                                    <div [hidden]="!role.errors.required">
+                                        Please select Role
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
+            
             <div class="row">
-                <div class="col-md-12">
-                    <button type="button" class="btn btn-primary pull-left">Archive</button>
-                    <button type="button" class="btn btn-danger pull-right " (click)="CancelAdd()">Cancel</button>
-                    <button type="submit" [disabled]="!personalInfo.form.valid"  class="btn btn-primary pull-right ">Submit</button>
-
-
+                <div class="col-md-12" style="text-align:center;" *ngIf="!archiveStatus">
+                    <button type="submit" [disabled]="!personalInfo.form.valid" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-danger " (click)="CancelAdd()">Cancel</button>
+                </div>
+            </div>
+            <div class="row" *ngIf="archiveStatus">
+                <div class="col-md-12" style="text-align:center;">
+                    
+                    <button type="button" [disabled]="!personalInfo.form.valid" (click)="OnUpdate(personalInfo.value)" class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-danger " (click)="CancelAdd()">Cancel</button>
                 </div>
             </div>
         </form>
     </div>
 
    
-<!--<div id="form-container" *ngIf="showContainer">
-    <div class="long-title">
-        <h3 style="text-align:center;">Employee details</h3>
-    </div>
-    <dx-form id="form"
-             [formData]="employees"
-             [colCount]="2">
-        <dxi-item itemType="group" caption="Personal Information">
-            <dxi-item dataField="EmployeeNumber" mode="Number" ></dxi-item>
-            <dxi-item dataField="EmployeeCode"></dxi-item>
-            <dxi-item dataField="EmployeeName"></dxi-item>
-            <dxi-item dataField="Email" caption="Email Address"></dxi-item>
-            <dxi-item dataField="Password" mode="Password"></dxi-item>
-            
-        </dxi-item>
-        <dxi-item itemType="group" caption="Administrative Information">
-            <div class="dx-field">
-                <div class="dx-field-label">Date Of Joining</div>
-                <div class="dx-field-value">
-                    <dx-date-box [value]="now"
-                                 dataField="DateOfJoining"
-                                 pickerType="rollers">
-                    </dx-date-box>
-                </div>
-            </div>
-            <div class="dx-field">
-                <div class="dx-field-label">Date Of Leaving</div>
-                <div class="dx-field-value">
-                    <dx-date-box [value]="now"
-                                 dataField="DateOfJoining"
-                                 pickerType="rollers">
-                    </dx-date-box>
-                </div>
-            </div>
-            <div class="dx-field">
-                <div class="dx-field-label">Is Active</div>
-                <div class="dx-field-value">
-                    <dx-check-box dataField="IsActive" class="pull-right" ></dx-check-box>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="sel1" class=" col-md-5">Select Category:</label>
-                <select class="form-control col-md-6" style="height:30px;" (change)="Onselect($event.target.value)" id="sel1" name="category">
-                    <option value="0">--Select--</option>
-                    <option *ngFor=" let category of categories"
-                            value={{category.OID}}>
-                        {{category.CategoryName}}
-                    </option>
-                </select>
-            </div>
-            <div class="form-group row">
-                <div class=" col-md-5"></div>
-                <select class="form-control col-md-6" style="height:30px;">
-                    <option value="0">--Select--</option>
-                    <option *ngFor=" let subcategory of subcategories" value={{subcategory.OID}}>
-                        {{subcategory.SubCategoryName}}
-                    </option>
-                </select>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-5">Department:</label>
-                <select class="form-control col-md-6" style="height:30px;">
-                    <option value="0">--Select--</option>
-                    <option *ngFor=" let depart of departments" value={{depart.OID}}>
-                        {{depart.Department}}
-                    </option>
-                </select>
-            </div>
-        </dxi-item>
-        <dxi-item itemType="group" caption="Employee Roles">
-                    <div class="checkbox" *ngFor="let role of roles">
-                        <label>
-                            <input type="checkbox" value="" name="">{{role.RollName}}
-                        </label>
-                </div>
-            </dxi-item>
-        <dxi-item itemType="group" caption="Administrative Access">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" value=""> Should Approve TimeSheet
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" value=""> Is Mail Auto Scheduled
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" value=""> Display Billing Price
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" value=""> Display Cost Price
-                </label>
-            </div>
-            
-                <img src="../assets/images/person.png" alt="your image" class="img-responsive" class="img-responsive center-block" />
-                <br>
-                <div class="row">
-                    <label for="exampleInputFile" class="col-md-4">Select Image:</label>
-                    <fieldset class="form-group col-md-8">
-                        <input type="file" class="form-control-file" id="exampleInputFile">
-                    </fieldset>
-                </div>
-           
-                <div id="fileuploader-container">
-                    <dx-file-uploader selectButtonText="Select photo"
-                                      labelText=""
-                                      accept="image/*"
-                                      uploadMode="useForm">
-                    </dx-file-uploader>
-                </div>
-            
-        </dxi-item>  
-        <dxi-item itemType="group">
-            <dx-button id="button"
-                       text="Submit"
-                       type="success">
-            </dx-button>
-            <dx-button id="button"
-                       text="Cancel"
-                       type="Danger"
-                       (click)="CancelAdd()">
-            </dx-button>
-        </dxi-item>
-    </dx-form>
-    
-</div>-->
+

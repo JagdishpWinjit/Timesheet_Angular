@@ -4,5 +4,8 @@
     RollNo: number;
     RollName: string;
     OptimisticLockField: string;
-    constructor() {}
+    constructor(OID: number, RollName: string) {
+        this.OID = OID;
+        this.RollName = RollName;
+    }
 }
